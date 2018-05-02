@@ -1,10 +1,8 @@
 const express = require('express');
-
 const graphqlHTTP = require('express-graphql');
-const schema = require('./schemas/schemaQL');
 
+const schema = require('./schemas/rootQL');
 const api = express();
-
 
 /**
  * GraphQL api route
