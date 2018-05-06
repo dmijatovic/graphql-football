@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "nodemon api.js",
     "test2": "nodemon tests/test2.js",
-    "test": "nodemon tests/main.js"
+    "test": "nodemon tests/main.js",
+    "football": "nodemon football.js"
   },
   "keywords": [],
   "author": "",
