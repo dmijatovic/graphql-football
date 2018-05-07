@@ -7,7 +7,8 @@ const apiTwitter = {
   search: (search)=>{        
     //console.log( url );
     return new Promise((res,rej)=>{          
-      let query = {'q':'#' + search,'count': 10}
+      let query = {'q':'#' + search,'count': 10,'result\_type':'recent'}
+      //let query = {'q':'#' + search,'count': 10}
       // Get 10 tweets containing the hashtag haiku
       twitter.getSearch( query, 
         (err)=>{          
