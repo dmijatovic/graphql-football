@@ -199,7 +199,7 @@ const apiFb = {
         headers: football.header
       })
       .then((resp)=>{        
-        console.log(resp.data)
+        //console.log(resp.data)
         res(resp.data.players);
       })
       .catch((e)=>{
