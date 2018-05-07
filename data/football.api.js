@@ -27,7 +27,7 @@ const apiFb = {
       })
       .then((resp)=>{
         let data=[];      
-        //console.log(res.data);              
+        //console.log(res.data);             
         //resolve data
         res(resp.data);
       })
@@ -103,6 +103,39 @@ const apiFb = {
     })    
   },
 
+  getTeams2: (id)=> {    
+    //let url = new URL(football.api.competitions);
+    let url = football.api.competitions + id + "/teams";
+    //console.log( url )    
+    return new Promise((res,rej)=>{
+      axios.get(url,{
+        headers: football.header
+      })
+      .then((resp)=>{        
+        //console.log("getTeams2...", resp.data)        
+        let teams=[];
+        resp.data.teams.map((team)=>{
+          //we need to extract id from links object!        
+          let url = team._links.self.href.split("/");
+          let id = url[url.length-1];
+          //console.log("teamid...", id);
+          teams.push({
+            id: id,
+            shortName: team.shortName,
+            name: team.name,
+            squadMarketValue: team.squadMarketValue,
+            crestUrl: team.crestUrl
+          });
+        });  
+        //resolve teams 
+        res( teams );
+      })
+      .catch((e)=>{
+        rej(e);
+      });        
+    });
+  },
+
   getTeam: (tid)=>{    
     let url = football.api.teams + tid;
     
@@ -150,6 +183,24 @@ const apiFb = {
       .then((resp)=>{        
         //console.log(resp.data)
         res(resp.data);
+      })
+      .catch((e)=>{
+        rej(e);
+      });        
+    })    
+  },
+
+  getPlayersByTeam2: (tid)=>{    
+    let url = football.api.teams + tid + "/players";
+    
+    //console.log( url )    
+    return new Promise((res,rej)=>{
+      axios.get(url,{
+        headers: football.header
+      })
+      .then((resp)=>{        
+        console.log(resp.data)
+        res(resp.data.players);
       })
       .catch((e)=>{
         rej(e);
