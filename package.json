@@ -18,6 +18,7 @@
     "express-graphql": "^0.6.12",
     "graphql": "^0.13.2",
     "node-fetch": "^2.1.2",
-    "nodemon": "^1.17.3"
+    "nodemon": "^1.17.3",
+    "twitter-node-client": "0.0.6"
   }
 }

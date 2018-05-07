@@ -10,6 +10,19 @@ const {
 
 const apiFb = require('../data/football.api');
 const apiWiki = require('../data/wikipedia.api');
+const apiTwitter = require('../data/twitter.api');
+
+const tweetType = new GraphQLObjectType({
+  name: "tweet",
+  fields:()=>({    
+    createdAt: {type: GraphQLString},
+    id: {type: GraphQLString},
+    text:{type: GraphQLString},
+    userName:{type: GraphQLString},
+    userLocation: {type: GraphQLString},
+    followers: {type: GraphQLInt}  
+  })
+})
 
 
 const competitionWiki = new GraphQLObjectType({
@@ -30,7 +43,13 @@ const playerType = new GraphQLObjectType({
     dateOfBirth: {type: GraphQLString },
     nationality: {type: GraphQLString },
     contractUntil: {type: GraphQLString },
-    marketValue: {type: GraphQLString }
+    marketValue: {type: GraphQLString },
+    tweets:{
+      type: new GraphQLList (tweetType),      
+      resolve(parent){        
+        return apiTwitter.search(parent.name);
+      }
+    }
   })
 });
 
@@ -49,6 +68,12 @@ const teamType = new GraphQLObjectType({
         //console.log("args...", args);
         return apiFb.getPlayersByTeam2(parent.id);
       }
+    },
+    tweets:{
+      type: new GraphQLList (tweetType),      
+      resolve(parent){        
+        return apiTwitter.search(parent.name);
+      }
     }
   })
 });
@@ -64,11 +89,14 @@ const competitionType = new GraphQLObjectType({
     numberOfMatchdays: { type: GraphQLInt },
     numberOfTeams: { type: GraphQLInt },
     numberOfGames: { type: GraphQLInt },
-    lastUpdated: { type: GraphQLString },
+    lastUpdated: { type: GraphQLString },    
     name: {
       type: GraphQLString,
       resolve(parent){
-        
+        let pos = parent.caption.indexOf(parent.year)
+          //remove year from bane
+          n = parent.caption.slice(0, pos-1);
+        return n;
       }
     },
     wiki:{
@@ -77,7 +105,7 @@ const competitionType = new GraphQLObjectType({
         //find year in caption
         let pos = parent.caption.indexOf(parent.year)
           //remove year from bane
-          name = parent.caption.slice(0, pos);
+          name = parent.caption.slice(0, pos-1);
         //console.log("Year in caption at...", pos);
         //console.log("Name...", name);
         //return name;
@@ -91,7 +119,7 @@ const competitionType = new GraphQLObjectType({
         //console.log("args...", args);
         return apiFb.getTeams2(parent.id);
       }
-    }
+    }    
   })
 });
 

@@ -40,13 +40,13 @@ const apiWiki = {
 
   openSearch: (search)=>{
     let url = wiki.api.search + "&search=" + search;
-    console.log( url );
+    //console.log( url );
     return new Promise((res,rej)=>{          
       axios.get(url,{
         headers: wiki.header
       })
       .then((resp)=>{        
-        console.log("wiki search...", resp.data);
+        //console.log("wiki search...", resp.data);
         let found=[], desc=[], url=[];
         //resolve data
         if (resp.data[1]){
