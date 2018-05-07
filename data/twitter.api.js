@@ -25,9 +25,8 @@ const apiTwitter = {
               userLocation: item.user.location,
               followers: item.user.followers_count 
             })
-          });
-          
-          console.log("Tweets...", tweets);
+          });          
+          //console.log("Tweets...", tweets);
           res(tweets);
         }
       );
