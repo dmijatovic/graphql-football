@@ -1,6 +1,6 @@
 
 const Twitter = require('twitter-node-client').Twitter;
-const config = require('./twitter.cfg');
+const config = require('./.twitter');
 const twitter = new Twitter(config);
 
 const apiTwitter = {    

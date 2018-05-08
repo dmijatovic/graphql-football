@@ -11,6 +11,21 @@ const {
 const apiFb = require('../data/football.api');
 const apiWiki = require('../data/wikipedia.api');
 const apiTwitter = require('../data/twitter.api');
+const apiYoutube = require('../data/youtube.api');
+
+const youtubeType =  new GraphQLObjectType({
+  name: "youtube",
+  fields:()=>({    
+    linkId: {type: GraphQLString}, 
+    publishedAt: {type: GraphQLString},
+    channelId: {type: GraphQLString},
+    channelTitle: {type: GraphQLString},
+    title: {type: GraphQLString},
+    desc: {type: GraphQLString},
+    thumb120x90: {type: GraphQLString},
+    thumb320x180: {type: GraphQLString},
+  })
+})
 
 const tweetType = new GraphQLObjectType({
   name: "tweet",
@@ -23,7 +38,6 @@ const tweetType = new GraphQLObjectType({
     followers: {type: GraphQLInt}  
   })
 })
-
 
 const competitionWiki = new GraphQLObjectType({
   name: "wikipediaCompetitionInfo",
@@ -49,6 +63,12 @@ const playerType = new GraphQLObjectType({
       resolve(parent){        
         return apiTwitter.search(parent.name);
       }
+    },
+    youtube: {
+      type: new GraphQLList (youtubeType),      
+      resolve(parent){        
+        return apiYoutube.searchVideos(parent.name);
+      }
     }
   })
 });
@@ -56,7 +76,8 @@ const playerType = new GraphQLObjectType({
 const teamType = new GraphQLObjectType({
   name: "team",
   fields:()=>({
-    id: { type: GraphQLInt },    
+    id: { type: GraphQLInt },  
+    code: {type: GraphQLString },   
     shortName: {type: GraphQLString },
     name: {type: GraphQLString },
     squadMarketValue: {type: GraphQLFloat },
@@ -73,6 +94,12 @@ const teamType = new GraphQLObjectType({
       type: new GraphQLList (tweetType),      
       resolve(parent){        
         return apiTwitter.search(parent.name);
+      }
+    },
+    youtube:{
+      type: new GraphQLList (youtubeType),      
+      resolve(parent){        
+        return apiYoutube.searchVideos(parent.name);
       }
     }
   })
@@ -123,6 +150,47 @@ const competitionType = new GraphQLObjectType({
   })
 });
 
+const teamStat = new GraphQLObjectType({
+  name:'teamStat',
+  fields:()=>({
+    goals: { type: GraphQLInt },    
+    goalsAgainst: { type: GraphQLInt },    
+    wins: { type: GraphQLInt },    
+    draws: { type: GraphQLInt },    
+    losses: { type: GraphQLInt }
+  })
+})
+
+const standingType = new GraphQLObjectType({
+  name:"standing",
+  fields:()=>({
+    position:{ type: GraphQLInt },    
+    teamId: { type: GraphQLInt },
+    teamName: { type: GraphQLString },    
+    playedGames: { type: GraphQLInt },
+    crestURI: { type: GraphQLString },
+    points: { type: GraphQLInt },
+    goals: { type: GraphQLInt },
+    goalsAgainst: { type: GraphQLInt },
+    goalDifference: { type: GraphQLInt }, 
+    wins: { type: GraphQLInt },   
+    draws: { type: GraphQLInt }, 
+    losses: { type: GraphQLInt },
+    home: {type: teamStat},
+    away: {type: teamStat}
+  })
+});
+
+const leagueTableType = new GraphQLObjectType({
+  name:"leagueTable",
+  fields:()=>({
+    league: { type: GraphQLString },
+    matchday: { type: GraphQLInt },
+    standing: {
+      type: new GraphQLList(standingType)      
+    }
+  })
+});
 
 const rootQuery = new GraphQLObjectType({
   name: 'rootQuery',
@@ -144,7 +212,43 @@ const rootQuery = new GraphQLObjectType({
       resolve(parent, args){
         return apiFb.getCompetion(args.id);
       }
-    } 
+    },
+    teams:{
+      type: new GraphQLList(teamType),
+      args:{
+        id: {type: GraphQLInt}  
+      },
+      resolve(parent,args){       
+        return apiFb.getTeams2(args.id);      
+      }
+    },
+    team:{
+      type: teamType,
+      args:{
+        tid: {type: GraphQLInt}  
+      },
+      resolve(parent,args){       
+        return apiFb.getTeam(args.tid);      
+      }
+    },
+    players:{
+      type:  new GraphQLList(playerType),
+      args:{
+        tid: {type: GraphQLInt}  
+      },
+      resolve(parent,args){       
+        return apiFb.getPlayersByTeam2(args.tid);      
+      }
+    },
+    leagueTable:{
+      type: leagueTableType,
+      args:{
+        id: {type: GraphQLInt}  
+      },
+      resolve(parent, args){
+        return apiFb.getLeagueTable2(args.id);
+      }
+    }
   }  
 })
 

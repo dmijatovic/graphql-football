@@ -21,10 +21,7 @@ const apiWiki = {
     //console.log( url )    
     return new Promise((res,rej)=>{
       axios.get(url,{
-        headers: wiki.header,
-        params:{
-          season: season 
-        } 
+        headers: wiki.header
       })
       .then((resp)=>{
         let data=[];      

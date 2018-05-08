@@ -80,6 +80,59 @@ const apiFb = {
     })    
   },
 
+  getLeagueTable2: (id, matchday = null )=> {            
+    let url = football.api.competitions + id + "/leagueTable";
+    //console.log( url )    
+    let headers={
+      headers: football.header,      
+    }
+    //add matchday to headers
+    if (matchday){
+      headers['params'] = {
+        matchday: matchday
+      }     
+    }
+    //return new promise
+    return new Promise((res,rej)=>{
+      axios.get(url, headers)
+      .then((resp)=>{        
+        let teams=[];
+        resp.data.standing.map((item)=>{          
+          console.log("item...", item);              
+          //we need to extract id from links object!        
+          let url = item._links.team.href.split("/");
+          let id = url[url.length-1];          
+          console.log("teamId...", id);              
+          teams.push({
+            position: item.position,
+            teamId: id,
+            teamName: item.teamName,
+            crestURI: item.crestURI,
+            playedGames: item.playedGames,
+            points: item.points,
+            goals: item.goals,
+            goalsAgainst: item.goalsAgainst,
+            goalDifference: item.goalDifference,
+            wins: item.wins,
+            draws: item.draws,
+            losses: item.losses,
+            home: item.home,
+            away: item.away
+          });
+        })
+        //console.log(resp.data);              
+        res({
+          league: resp.data.leagueCaption,
+          matchday: resp.data.matchday,
+          standing: teams 
+        });
+      })
+      .catch((e)=>{
+        rej(e);
+      });        
+    })    
+  },
+
 
   getTeams: (id)=> {    
     //let url = new URL(football.api.competitions);
@@ -145,7 +198,9 @@ const apiFb = {
         headers: football.header
       })
       .then((resp)=>{        
-        //console.log(resp.data)
+        //add team id
+        resp.data['id'] = tid;
+        console.log(resp.data)        
         res(resp.data);
       })
       .catch((e)=>{
@@ -207,7 +262,6 @@ const apiFb = {
       });        
     })    
   }
-
 }
 
 module.exports = apiFb; 
