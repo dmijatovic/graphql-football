@@ -146,7 +146,15 @@ const competitionType = new GraphQLObjectType({
         //console.log("args...", args);
         return apiFb.getTeams2(parent.id);
       }
-    }    
+    },
+    nextRound:{
+      type: fixtureListType,      
+      resolve(parent,args){
+        return apiFb.getFixturesByPeriod(
+          null, parent.league
+        );
+      }
+    }
   })
 });
 
@@ -191,6 +199,96 @@ const leagueTableType = new GraphQLObjectType({
     }
   })
 });
+
+const head2headType = new GraphQLObjectType({
+  name:"head2head",
+  fields:()=>({
+    count: { type: GraphQLInt },
+    timeFrameStart: { type: GraphQLString },
+    timeFrameEnd: { type: GraphQLString },
+    homeTeamWins: { type: GraphQLInt },
+    awayTeamWins: { type: GraphQLInt },
+    draws: { type: GraphQLInt },
+  })
+})
+
+const fixtureResult=new GraphQLObjectType({
+  name:"fixtureResult",
+  fields:()=>({
+    goalsHomeTeam: { type: GraphQLInt },
+    goalsAwayTeam: { type: GraphQLInt }        
+  })
+})
+
+const fixtureType = new GraphQLObjectType({
+  name:"fixture",
+  fields:()=>({
+    fixtureId: { type: GraphQLInt },
+    competitionId: { type: GraphQLInt },        
+    date: { type: GraphQLString },
+    status: { type: GraphQLString },
+    matchday: { type: GraphQLInt },        
+    homeTeamId: { type: GraphQLInt },
+    homeTeamName: { type: GraphQLString },
+    awayTeamId: { type: GraphQLInt },
+    awayTeamName: { type: GraphQLString },
+    result: { type: fixtureResult },
+    head2head: {
+      type: head2headType,
+      args:{
+        count:{type: GraphQLInt}  
+      },
+      resolve(parent, args){
+        return apiFb.getHead2Head(
+          parent.fixtureId, args.count 
+        )
+      }
+    }
+  })
+});
+
+const fixtureListType = new GraphQLObjectType({
+  name:"fixtureList",
+  fields:()=>({
+    timeFrameStart: { type: GraphQLString },
+    timeFrameEnd: { type: GraphQLString },
+    count: { type: GraphQLInt },
+    fixtures: {
+      type: new GraphQLList (fixtureType),
+      resolve(parent){
+        //console.log("extract parent", parent);
+        let games=[];
+        parent.fixtures.map((item)=>{
+          //console.log("fixtures...", item);
+          let url,fid,cid,hid,aid;
+          //we need to extract id from links object!        
+          url = item._links.self.href.split("/");
+          fid = url[url.length-1];
+          if (item._links.competition){
+            url = item._links.competition.href.split("/");
+            cid = url[url.length-1];
+          }
+          if (item._links.homeTeam){
+            url = item._links.homeTeam.href.split("/");
+            hid = url[url.length-1];
+          }
+          if (item._links.awayTeam){
+            url = item._links.awayTeam.href.split("/");
+            aid = url[url.length-1];
+          }          
+          games.push({
+            ...item,
+            fixtureId: fid,
+            competitionId: cid,
+            homeTeamId: hid,
+            awayTeamId: aid 
+          });
+        });
+        return games;
+      }
+    }
+  })
+})
 
 const rootQuery = new GraphQLObjectType({
   name: 'rootQuery',
@@ -247,6 +345,34 @@ const rootQuery = new GraphQLObjectType({
       },
       resolve(parent, args){
         return apiFb.getLeagueTable2(args.id);
+      }
+    },
+    fixturesByPeriod:{
+      type: fixtureListType,
+      args:{
+        nday:{type: GraphQLString},    
+        league:{type: GraphQLString}        
+      },
+      resolve(parent,args){
+        return apiFb.getFixturesByPeriod(
+          args.nday,args.league
+        );
+      }
+    },
+    fixturesByTeam:{
+      type: fixtureListType,
+      args:{
+        //teamId
+        tid: {type: GraphQLInt},    
+        season:{type: GraphQLInt},    
+        nday:{type: GraphQLString},
+        venue:{type: GraphQLString}        
+      },
+      resolve(parent,args){
+        return apiFb.getFixturesByTeam(
+          args.tid, args.season,
+          args.nday,args.venue
+        );
       }
     }
   }  
