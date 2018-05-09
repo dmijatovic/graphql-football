@@ -4,16 +4,16 @@ const {
   GraphQLInt,  
   GraphQLFloat,
   GraphQLString,
-  GraphQLList
+  GraphQLList,
+  GraphQLEnumType
 } = require('graphql');
 
 const apiFb =  require('../../data/football.api');
 const apiTwitter = require('../../data/twitter.api');
-const apiYoutube = require('../../data/youtube.api');
 
 const playerType = require('./playerType');
 const tweetType = require('./tweetType');
-const youtubeType = require('./youtubeType');
+const youtubeQL = require("./youtubeQL");
 
 const teamType = new GraphQLObjectType({
   name: "team",
@@ -38,12 +38,7 @@ const teamType = new GraphQLObjectType({
         return apiTwitter.search(parent.name);
       }
     },
-    youtube:{
-      type: new GraphQLList (youtubeType),      
-      resolve(parent){        
-        return apiYoutube.searchVideos(parent.name);
-      }
-    }
+    youtube: youtubeQL
   })
 })
 module.exports = teamType;

@@ -318,23 +318,4 @@ const apiFb = {
 }
 
 module.exports = apiFb; 
-/*
-apiFb.getCompetions("2017").then((d)=>{
-  console.log(d);
-});
-
-apiFb.getCompetion(445).then((d)=>{
-  console.log(d);
-})
-
-apiFb.getLeagueTable(445).then((d)=>{
-  console.log(d);
-})
-apiFb.getTeam(6).then((d)=>{
-  console.log(d);
-})
-apiFb.getPlayersByTeam(6).then((d)=>{
-  console.log(d);
-})
-*/
 

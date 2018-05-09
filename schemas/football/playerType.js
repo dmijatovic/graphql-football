@@ -10,7 +10,8 @@ const apiTwitter = require('../../data/twitter.api');
 const apiYoutube = require('../../data/youtube.api');
 
 const tweetType = require('./tweetType');
-const youtubeType = require('./youtubeType');
+//const youtubeType = require('./youtubeType');
+const youtubeQL = require("./youtubeQL");
 
 const playerType = new GraphQLObjectType({
   name: "player",
@@ -28,12 +29,7 @@ const playerType = new GraphQLObjectType({
         return apiTwitter.search(parent.name);
       }
     },
-    youtube: {
-      type: new GraphQLList (youtubeType),      
-      resolve(parent){        
-        return apiYoutube.searchVideos(parent.name);
-      }
-    }
+    youtube: youtubeQL
   })
 })
 module.exports = playerType;

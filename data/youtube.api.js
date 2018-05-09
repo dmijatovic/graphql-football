@@ -5,14 +5,14 @@ const youtube = require ('./.youtube');
 
 const apiYouTube = {    
 
-  searchVideos: (search)=>{
+  searchVideos: (search, order="viewCount")=>{
     let url = youtube.api.search, 
       q={
         part:'snippet',
         type:'video',
         key: youtube.key,
         maxResults: 5,
-        order: "viewCount",
+        order: order,
         topicId: youtube.category.channelId,
         q: search
       };
