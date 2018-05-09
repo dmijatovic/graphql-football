@@ -16,6 +16,7 @@ const teamType = require('./teamType');
 
 const competitionType = new GraphQLObjectType({
   name: "competition",
+  description:"Competition info from football.org incl. wiki info and teams object. nextRound includes all games planned for 7 days in the future from today.",
   fields:()=>({
     id: { type: GraphQLInt },
     caption: { type: GraphQLString },

@@ -8,7 +8,7 @@ const apiFb = {
   getCompetions: (season)=> {    
     //let url = new URL(football.api.competitions);
     let url = football.api.competitions;
-    //console.log( url )    
+    //console.log("apiFb.getCompetitions...url...", url );
     return new Promise((res,rej)=>{
       axios.get(url,{
         headers: football.header,
