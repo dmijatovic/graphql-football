@@ -1,22 +1,23 @@
-const express = require('express');
-const graphqlHTTP = require('express-graphql');
-
-const schema = require('./schemas/rootQL');
-const api = express();
 
 /**
- * GraphQL api route
+ * Require express and graphQL infra
  */
-api.use('/api', graphqlHTTP({
-  schema: schema,
-  graphiql:true
+var express = require('express');
+var graphqlHTTP = require('express-graphql');
+var { rootQuery } = require ('./schemas/football.ql');
+
+/**
+ * Set up express server 
+ */
+var app = express();
+app.use('/api', graphqlHTTP({
+  schema: rootQuery,
+  graphiql: true,
 }));
-
-
 /**
  * root path at the END otherwise will not let other match
  */
-api.use('/',(req,res)=>{
+app.use('/',(req,res)=>{
   res.send(`
     <h1>It works...</h1>
     <p>
@@ -25,7 +26,6 @@ api.use('/',(req,res)=>{
   `);
 });
 
-
-api.listen(4001,()=>{
+app.listen(4001,()=>{
   console.log("Api listens on port...4001");
 });

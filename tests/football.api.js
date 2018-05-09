@@ -4,7 +4,7 @@ const { URL, URLSearchParams } = require('url');
 
 const football={
   header:{
-    "X-Auth-Token": "17f7832838f1432b809895e3c6b352a9"
+    "X-Auth-Token": ""
   },
   api:{
     competitions:"http://api.football-data.org/v1/competitions/",
