@@ -67,7 +67,7 @@ const apiWiki = {
     return new Promise((res,rej)=>{
       this.openSearch(term)
       .then((d)=>{
-        console.log(d);
+        //console.log(d);
         res(d);        
       })      
       .catch((e)=>{

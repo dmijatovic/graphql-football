@@ -93,7 +93,7 @@ const apiFb = {
           //we need to extract id from links object!        
           let url = item._links.team.href.split("/");
           let id = url[url.length-1];          
-          console.log("teamId...", id);              
+          //console.log("teamId...", id);              
           teams.push({
             position: item.position,
             teamId: id,
@@ -191,7 +191,7 @@ const apiFb = {
       .then((resp)=>{        
         //add team id
         resp.data['id'] = tid;
-        console.log(resp.data)        
+        //console.log(resp.data)        
         res(resp.data);
       })
       .catch((e)=>{
@@ -270,8 +270,7 @@ const apiFb = {
    * @param league:string prop -> competition.league -> filter fixtures
    */
   getFixturesByPeriod: (nday="n7",league="")=>{    
-    let url = football.api.fixtures;
-    
+    let url = football.api.fixtures;    
     //console.log( url )    
     return new Promise((res,rej)=>{
       axios.get(url,{
