@@ -1,17 +1,7 @@
 
 const axios = require ('axios');
 const { URL, URLSearchParams } = require('url');
-
-const football={
-  header:{
-    "X-Auth-Token": "17f7832838f1432b809895e3c6b352a9"
-  },
-  api:{
-    competitions:"http://api.football-data.org/v1/competitions/",
-    teams: "http://api.football-data.org/v1/teams/",
-    fixtures: "http://api.football-data.org/v1/fixtures/" 
-  }  
-}
+const football = require('./.football');
 
 const apiFb = {  
 
@@ -301,17 +291,18 @@ const apiFb = {
     })    
   },
   /**
+   * Get head2head stat for n 
    * @param fix:number fixtureId
-   * @param head2head: number of historical games to analyse, default=1
+   * @param h2h: number of historical games to analyse, default=5
    */
-  getHead2Head: (fid, head2head=3)=>{
+  getHead2Head: (fid, h2h=5)=>{
     let url = football.api.fixtures + fid;
-    console.log("Head2Head...url...", url);    
+    //console.log("Head2Head...url...", url);    
     return new Promise((res,rej)=>{
       axios.get(url,{
         headers: football.header,
         params:{
-          head2head: head2head
+          head2head: h2h
         }
       })
       .then((resp)=>{        
