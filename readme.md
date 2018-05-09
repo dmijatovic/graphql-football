@@ -1,8 +1,8 @@
-# Foorbal.org GraphQL idea
+# Footbal.org GraphQL idea
 
-This demo uses GraphQL to query footbal data from various open sources: footbal.org, wikipedia, twitter and youtube.
+This demo uses GraphQL to query football data from various open sources: football.org, wikipedia, twitter and youtube.
 
-## Prerequisites
+## Requirements
 
 For all open data sources used in this demo, except for wikipedia, you need an api key. I do not cover extensively how to obtain a key but below I provide the links to sites with more info. Api keys are imported in data/api scripts at the top of the file. The key is passed in the header of request (using axios).
 
