@@ -9,11 +9,10 @@ const {
 } = require('graphql');
 
 const apiFb =  require('../../data/football.api');
-const apiTwitter = require('../../data/twitter.api');
 
 const playerType = require('./playerType');
-const tweetType = require('./tweetType');
-const youtubeQL = require("./youtubeQL");
+const tweetsQL = require('./tweets.ql');
+const youtubeQL = require("./youtube.ql");
 
 const teamType = new GraphQLObjectType({
   name: "team",
@@ -32,12 +31,7 @@ const teamType = new GraphQLObjectType({
         return apiFb.getPlayersByTeam2(parent.id);
       }
     },
-    tweets:{
-      type: new GraphQLList (tweetType),      
-      resolve(parent){        
-        return apiTwitter.search(parent.name);
-      }
-    },
+    tweets: tweetsQL,
     youtube: youtubeQL
   })
 })

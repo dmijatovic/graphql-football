@@ -6,12 +6,9 @@ const {
   GraphQLList
 } = require('graphql');
 
-const apiTwitter = require('../../data/twitter.api');
-const apiYoutube = require('../../data/youtube.api');
 
-const tweetType = require('./tweetType');
-//const youtubeType = require('./youtubeType');
-const youtubeQL = require("./youtubeQL");
+const tweetsQL = require('./tweets.ql');
+const youtubeQL = require("./youtube.ql");
 
 const playerType = new GraphQLObjectType({
   name: "player",
@@ -23,12 +20,7 @@ const playerType = new GraphQLObjectType({
     nationality: {type: GraphQLString },
     contractUntil: {type: GraphQLString },
     marketValue: {type: GraphQLString },
-    tweets:{
-      type: new GraphQLList (tweetType),      
-      resolve(parent){        
-        return apiTwitter.search(parent.name);
-      }
-    },
+    tweets: tweetsQL,
     youtube: youtubeQL
   })
 })

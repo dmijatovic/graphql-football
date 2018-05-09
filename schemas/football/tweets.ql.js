@@ -2,9 +2,11 @@
 const {   
   GraphQLObjectType,  
   GraphQLInt,  
-  GraphQLString  
+  GraphQLString,
+  GraphQLList  
 } = require('graphql');
 
+const apiTwitter = require('../../data/twitter.api');
 
 const tweetType = new GraphQLObjectType({
   name: "tweet",
@@ -17,4 +19,12 @@ const tweetType = new GraphQLObjectType({
     followers: {type: GraphQLInt}  
   })
 })
-module.exports = tweetType;
+
+const tweetsQL={
+  type: new GraphQLList (tweetType),      
+  resolve(parent){        
+    return apiTwitter.search(parent.name);
+  }
+}
+
+module.exports = tweetsQL;
