@@ -15,7 +15,6 @@ const apiTwitter = require('../data/twitter.api');
 const apiYoutube = require('../data/youtube.api');
 
 //GraphQL defs
-
 const competitionType = require('./football/competitionType');
 const teamType = require('./football/teamType');
 const playerType = require('./football/playerType');
@@ -29,10 +28,17 @@ const rootQuery = new GraphQLObjectType({
     competitions:{
       type: new GraphQLList(competitionType),
       args:{
-        season: { type: GraphQLInt }
+        season: { 
+          type: GraphQLInt, 
+          description:"Provide 4 digit value of the year when the season started. Value 2017 represents 2017/18 football season."
+        },
+        select: { 
+          type: GraphQLList (GraphQLInt),
+          description:"Provide a list of integer values that represent competition id's. Default value is empty array which will return all competitions." 
+        }
       },
       resolve(parent, args){
-        return apiFb.getCompetions(args.season);
+        return apiFb.getCompetions(args.season, args.select);
       },
       description: "Require all competitions from football.org by season. Defaul season is current season"
     },

@@ -1,4 +1,3 @@
-
 /**
  * Require express and graphQL infra
  */

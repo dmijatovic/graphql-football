@@ -13,6 +13,7 @@ const apiWiki = require('../../data/wikipedia.api');
 const fixtureListType = require('./fixtureListType');
 const competitionWiki = require('./competitionWiki');
 const teamType = require('./teamType');
+const leagueTableType = require('./leagueTableType');
 
 const competitionType = new GraphQLObjectType({
   name: "competition",
@@ -64,6 +65,13 @@ const competitionType = new GraphQLObjectType({
           null, parent.league
         );
       }
+    },
+    leagueTable:{
+      type: leagueTableType,      
+      resolve(parent, args){
+        return apiFb.getLeagueTable2(parent.id);
+      },
+      description:"Current standings for selected competition."
     }
   })
 });

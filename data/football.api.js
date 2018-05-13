@@ -5,7 +5,7 @@ const football = require('./.football');
 
 const apiFb = {  
 
-  getCompetions: (season)=> {    
+  getCompetions: (season, select=[])=> {    
     //let url = new URL(football.api.competitions);
     let url = football.api.competitions;
     //console.log("apiFb.getCompetitions...url...", url );
@@ -19,8 +19,20 @@ const apiFb = {
       .then((resp)=>{
         let data=[];      
         //console.log(res.data);             
+        //console.log("select...", select);             
         //resolve data
-        res(resp.data);
+        if (select.length==0){
+          //return all
+          data = resp.data;
+        } else {
+          //return selection
+          resp.data.map((item)=>{
+            if (select.includes(item.id)){
+              data.push(item);
+            }
+          });
+        }
+        res(data);
       })
       .catch((e)=>{
         rej(e);
